@@ -1,4 +1,4 @@
-package fun.abm.springbatchtesting.SpringBatchTesting.config.readersCofnig;
+package fun.abm.springbatchtesting.SpringBatchTesting.config;
 
 
 import fun.abm.springbatchtesting.SpringBatchTesting.domain.Person;

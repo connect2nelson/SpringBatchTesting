@@ -1,9 +1,8 @@
 package fun.abm.springbatchtesting.SpringBatchTesting.config;
 
 
-import fun.abm.springbatchtesting.SpringBatchTesting.config.readersCofnig.ReadersConfig;
 import fun.abm.springbatchtesting.SpringBatchTesting.domain.Person;
-import fun.abm.springbatchtesting.SpringBatchTesting.processor.PersonItemProcessor;
+import fun.abm.springbatchtesting.SpringBatchTesting.processor.ProcessorConfig;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
@@ -23,16 +22,14 @@ class ReadPersonDetailsStepConfig {
     @Autowired
     private ReadersConfig readersConfig;
 
-    @Bean
-    private PersonItemProcessor processor() {
-        return new PersonItemProcessor();
-    }
+    @Autowired
+    private ProcessorConfig processorConfig;
 
     @Autowired
     private DataSource dataSource;
 
     @Bean
-    private JdbcBatchItemWriter<Person> writer() {
+     JdbcBatchItemWriter<Person> writer() {
         JdbcBatchItemWriter<Person> writer = new JdbcBatchItemWriter<>();
         writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>());
         writer.setSql("INSERT INTO people (first_name, last_name) VALUES (:firstName, :lastName)");
@@ -44,7 +41,7 @@ class ReadPersonDetailsStepConfig {
         return stepBuilderFactory.get("read-person-details")
                 .<Person, Person> chunk(10)
                 .reader(readersConfig.reader())
-                .processor(processor())
+                .processor(processorConfig.processor())
                 .writer(writer())
                 .build();
     }
